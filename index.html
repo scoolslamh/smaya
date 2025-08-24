@@ -1,3 +1,10 @@
+
+<body>
+  <script>
+    if (!localStorage.getItem("loggedIn")) {
+      window.location.href = "login.html"; // منع الدخول بدون تسجيل
+    }
+  </script>
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
