@@ -1,12 +1,11 @@
-# ✅ إعادة توجيه أي طلب على /api/* إلى Google Apps Script
+[[redirects]]
+  from = "/"
+  to = "/login.html"
+  status = 302
+  force = true
+
 [[redirects]]
   from = "/api/*"
   to = "https://script.google.com/macros/s/AKfycbwqd_Ze2vqdA0Fv_mWa-u7TzR_GI_qgXBXl9zqWixo4J6SgpmXxXE9kWd75kylpmA/exec"
   status = 200
   force = true
-
-# ✅ جعل صفحة البداية هي login.html
-[[redirects]]
-  from = "/"
-  to = "/login.html"
-  status = 302
