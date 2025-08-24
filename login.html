@@ -6,7 +6,6 @@
   <title>تسجيل الدخول - نظام تقييم المباني المدرسية</title>
   <link rel="stylesheet" href="style.css">
   <style>
-    /* 🔹 صفحة تسجيل الدخول */
     body {
       margin: 0;
       font-family: "Tajawal", sans-serif;
@@ -99,6 +98,13 @@
 </head>
 <body>
 
+  <!-- ✅ منع الوصول للصفحة إذا كان مسجّل دخول -->
+  <script>
+    if (localStorage.getItem("loggedIn")) {
+      window.location.href = "index.html";
+    }
+  </script>
+
   <!-- الهيدر -->
   <header class="main-header">
     <img src="logo.png" alt="شعار شركة سمايا" class="logo">
@@ -156,15 +162,18 @@
           localStorage.setItem("username", username);
           localStorage.setItem("role", data.role || "");
           localStorage.setItem("fullName", data.fullName || "مشرف");
+          localStorage.setItem("loginTime", Date.now()); // وقت الدخول
 
           // ✅ الانتقال لصفحة التقييم
           window.location.href = "index.html";
         } else {
           document.getElementById("errorMsg").textContent = data.message || "❌ بيانات الدخول غير صحيحة";
+          e.target.password.value = ""; // تفريغ كلمة المرور عند الخطأ
         }
       } catch (err) {
         document.getElementById("errorMsg").textContent = "⚠️ خطأ في الاتصال بالخادم";
         console.error("خطأ:", err);
+        e.target.password.value = ""; // تفريغ كلمة المرور
       }
     });
   </script>

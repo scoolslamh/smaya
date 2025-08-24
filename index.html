@@ -6,6 +6,12 @@
   <title>نظام تقييم المباني المدرسية</title>
   <link rel="stylesheet" href="style.css" />
   <style>
+    body {
+      font-family: "Tajawal", sans-serif;
+      margin: 0;
+      background: #f5f7fa;
+    }
+
     /* ✅ الفلاتر */
     .filters {
       background: #f9fbfd;
@@ -39,15 +45,7 @@
       display: none;
     }
 
-    /* ✅ توحيد حجم الحقول */
-    .form-grid input,
-    .form-grid select,
-    .form-grid textarea {
-      width: 100%;
-      box-sizing: border-box;
-    }
-
-    /* ✅ شبكة الحقول: عمودين */
+    /* ✅ شبكة الحقول */
     .form-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -80,7 +78,7 @@
   <!-- ✅ منع الدخول بدون تسجيل -->
   <script>
     if (!localStorage.getItem("loggedIn")) {
-      window.location.href = "login.html";
+      window.location.href = "login.html"; // توجيه إجباري لصفحة الدخول
     }
   </script>
 
@@ -133,7 +131,7 @@
           <label>تاريخ الزيارة: 
             <input type="date" id="visit_date" name="visit_date" required>
           </label>
-          <!-- الحقول المخفية لليوم والشهر والسنة -->
+          <!-- الحقول المخفية -->
           <input type="hidden" id="visit_day" name="visit_day">
           <input type="hidden" id="visit_month" name="visit_month">
           <input type="hidden" id="visit_year" name="visit_year">
@@ -145,7 +143,7 @@
           <label>المدينة: <input type="text" name="city" id="city" readonly></label>
           <label>اسم المدرسة: <input type="text" name="school" id="school" readonly></label>
 
-          <!-- 🟢 الرقم الوزاري مفتوح للإدخال -->
+          <!-- 🟢 الرقم الوزاري يقبل الإدخال -->
           <label>الرقم الوزاري: <input type="text" name="code" id="code" required></label>
 
           <label>اسم الحي/الشارع: <input type="text" name="street"></label>
@@ -233,7 +231,6 @@
           <button type="submit">إرسال</button>
         </div>
       </div>
-
     </form>
 
     <!-- ✅ أزرار إضافية -->
@@ -251,7 +248,7 @@
   <script src="script.js"></script>
 
   <script>
-    // ✅ استخراج اليوم/الشهر/السنة تلقائيًا من التاريخ
+    // ✅ استخراج اليوم/الشهر/السنة تلقائيًا
     document.getElementById("visit_date").addEventListener("change", function() {
       const date = new Date(this.value);
       const days = ["الأحد","الإثنين","الثلاثاء","الأربعاء","الخميس","الجمعة","السبت"];
@@ -260,7 +257,7 @@
       document.getElementById("visit_year").value = date.getFullYear();
     });
 
-    // ✅ تحميل اسم المشرف تلقائيًا من تسجيل الدخول
+    // ✅ تحميل اسم المشرف من LocalStorage
     document.addEventListener("DOMContentLoaded", () => {
       const fullName = localStorage.getItem("fullName") || "مشرف";
       document.getElementById("visitor").value = fullName;
