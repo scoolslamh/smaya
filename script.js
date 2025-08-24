@@ -6,11 +6,7 @@ const API_URL = "/api";
 async function loadSchools() {
   try {
     const res = await fetch(API_URL, { method: "GET" });
-    
-    // لو ما رجع JSON (مثلاً رجع HTML خطأ) → نوقف
-    if (!res.ok) {
-      throw new Error(`HTTP Error ${res.status}`);
-    }
+    if (!res.ok) throw new Error(`HTTP Error ${res.status}`);
 
     const schools = await res.json();
 
@@ -82,9 +78,8 @@ async function loadSchools() {
       // ✅ استدعاء آخر بيانات للمدرسة من السيرفر
       try {
         const res = await fetch(`${API_URL}?school=${encodeURIComponent(selectedOption.value)}`);
-        
         if (!res.ok) throw new Error(`HTTP Error ${res.status}`);
-        
+
         const data = await res.json();
 
         if (data.status === "found") {
@@ -110,6 +105,42 @@ async function loadSchools() {
     alert("⚠️ تعذر تحميل قائمة المدارس. يرجى المحاولة لاحقاً.");
   }
 }
+
+// ✅ إرسال التقييم إلى السيرفر
+document.getElementById("evaluationForm").addEventListener("submit", async function(e) {
+  e.preventDefault();
+
+  const formData = new FormData(this);
+  const body = {};
+  formData.forEach((value, key) => { body[key] = value; });
+
+  try {
+    const res = await fetch(API_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ action: "saveEvaluation", ...body })
+    });
+
+    if (!res.ok) throw new Error(`HTTP Error ${res.status}`);
+    const data = await res.json();
+
+    if (data.success) {
+      alert("✅ " + data.message + " | رقم الزيارة: " + data.visitNumber);
+      this.reset();
+      document.getElementById("evaluationForm").style.display = "none";
+      document.getElementById("regionFilter").value = "";
+      document.getElementById("cityFilter").innerHTML = '<option value="">اختر المدينة</option>';
+      document.getElementById("cityFilter").disabled = true;
+      document.getElementById("schoolFilter").innerHTML = '<option value="">اختر المدرسة</option>';
+      document.getElementById("schoolFilter").disabled = true;
+    } else {
+      alert("❌ " + data.message);
+    }
+  } catch (err) {
+    console.error("⚠️ خطأ أثناء الإرسال:", err);
+    alert("⚠️ لم يتم الاتصال بالخادم. حاول مرة أخرى.");
+  }
+});
 
 // ✅ تحميل المدارس عند فتح الصفحة
 window.addEventListener("DOMContentLoaded", loadSchools);
