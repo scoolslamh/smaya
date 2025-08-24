@@ -271,7 +271,7 @@
       });
     });
 
-    // التحكم في الخطوات
+    // التحكم في الخطوات (مع حل مشكلة required)
     document.addEventListener("DOMContentLoaded", () => {
       const steps = document.querySelectorAll(".form-step");
       const nextBtns = document.querySelectorAll(".next");
@@ -281,6 +281,19 @@
       function showStep(index) {
         steps.forEach((step, i) => {
           step.style.display = i === index ? "block" : "none";
+
+          // ✅ إضافة/إزالة required فقط للحقول الظاهرة
+          const inputs = step.querySelectorAll("input, select, textarea");
+          inputs.forEach(inp => {
+            if (i === index) {
+              inp.setAttribute("required", inp.hasAttribute("data-original-required") || inp.required);
+            } else {
+              if (inp.hasAttribute("required")) {
+                inp.setAttribute("data-original-required", "true");
+                inp.removeAttribute("required");
+              }
+            }
+          });
         });
       }
 
