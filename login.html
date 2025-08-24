@@ -7,6 +7,15 @@
   <link rel="stylesheet" href="style.css">
   <style>
     /* 🔹 صفحة تسجيل الدخول */
+    body {
+      margin: 0;
+      font-family: "Tajawal", sans-serif;
+      background: #f5f7fa;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
     .login-container {
       flex: 1;
       display: flex;
@@ -69,6 +78,23 @@
       text-align: center;
       font-size: 14px;
     }
+
+    header, footer {
+      background: #13344f;
+      color: white;
+      text-align: center;
+      padding: 15px 0;
+    }
+
+    header img.logo {
+      height: 50px;
+      display: block;
+      margin: 0 auto 10px;
+    }
+
+    footer {
+      font-size: 14px;
+    }
   </style>
 </head>
 <body>
@@ -119,13 +145,13 @@
         const data = await res.json();
 
         if (data.success) {
-          // حفظ بيانات المستخدم
+          // ✅ حفظ بيانات المستخدم في LocalStorage
           localStorage.setItem("loggedIn", "true");
           localStorage.setItem("username", username);
-          localStorage.setItem("role", data.role);
-          localStorage.setItem("fullName", data.fullName);
+          localStorage.setItem("role", data.role || "");
+          localStorage.setItem("visitor", data.fullName || "مشرف");
 
-          // الانتقال لصفحة التقييم
+          // ✅ الانتقال لصفحة التقييم
           window.location.href = "index.html";
         } else {
           document.getElementById("errorMsg").textContent = data.message;

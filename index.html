@@ -77,6 +77,13 @@
 </head>
 <body>
 
+  <!-- ✅ منع الدخول بدون تسجيل -->
+  <script>
+    if (!localStorage.getItem("loggedIn")) {
+      window.location.href = "login.html";
+    }
+  </script>
+
   <!-- الهيدر -->
   <header class="main-header">
     <img src="logo.png" alt="شعار شركة سمايا" class="logo">
