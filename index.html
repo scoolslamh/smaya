@@ -12,7 +12,6 @@
       background: #f5f7fa;
     }
 
-    /* ✅ الفلاتر */
     .filters {
       background: #f9fbfd;
       padding: 20px;
@@ -40,12 +39,10 @@
       box-sizing: border-box;
     }
 
-    /* ✅ إخفاء النموذج لحين اختيار مدرسة */
     #evaluationForm {
       display: none;
     }
 
-    /* ✅ شبكة الحقول */
     .form-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -53,7 +50,6 @@
       margin-bottom: 20px;
     }
 
-    /* ✅ أزرار التنقل */
     .form-navigation {
       text-align: center;
       margin-top: 20px;
@@ -75,10 +71,10 @@
 </head>
 <body>
 
-  <!-- ✅ منع الدخول بدون تسجيل -->
+  <!-- ✅ التحقق من تسجيل الدخول -->
   <script>
-    if (!localStorage.getItem("loggedIn")) {
-      window.location.href = "login.html"; // توجيه إجباري لصفحة الدخول
+    if (localStorage.getItem("loggedIn") !== "true") {
+      window.location.href = "login.html";
     }
   </script>
 
@@ -91,7 +87,7 @@
 
   <main class="container">
 
-    <!-- ✅ قسم الفلاتر -->
+    <!-- قسم الفلاتر -->
     <section class="filters">
       <h2>اختيار المدرسة</h2>
 
@@ -115,35 +111,32 @@
       </label>
     </section>
 
-    <!-- ✅ شريط التقدم -->
+    <!-- شريط التقدم -->
     <div id="progress-bar">
       <div id="progress"></div>
     </div>
 
-    <!-- ✅ النماذج -->
+    <!-- النماذج -->
     <form id="evaluationForm">
 
-      <!-- القسم الأول: البيانات الأساسية -->
+      <!-- القسم الأول -->
       <div class="form-step active">
         <h2>البيانات الأساسية</h2>
         <div class="form-grid">
-          <!-- تاريخ الزيارة -->
-          <label>تاريخ الزيارة: 
+          <label>تاريخ الزيارة:
             <input type="date" id="visit_date" name="visit_date" required>
           </label>
-          <!-- الحقول المخفية -->
           <input type="hidden" id="visit_day" name="visit_day">
           <input type="hidden" id="visit_month" name="visit_month">
           <input type="hidden" id="visit_year" name="visit_year">
 
-          <label>المشرف الزائر: 
+          <label>المشرف الزائر:
             <input type="text" name="visitor" id="visitor" readonly>
           </label>
           <label>المنطقة: <input type="text" name="region" id="region" readonly></label>
           <label>المدينة: <input type="text" name="city" id="city" readonly></label>
           <label>اسم المدرسة: <input type="text" name="school" id="school" readonly></label>
 
-          <!-- 🟢 الرقم الوزاري يقبل الإدخال -->
           <label>الرقم الوزاري: <input type="text" name="code" id="code" required></label>
 
           <label>اسم الحي/الشارع: <input type="text" name="street"></label>
@@ -152,10 +145,10 @@
           <label>المراحل الملحقة: <input type="text" name="extra_stages"></label>
           <label>تاريخ الفحص: <input type="date" name="inspection_date"></label>
           <label>عدد الفصول: <input type="number" name="classes"></label>
-          <label>شبكة المياه تصل للمدرسة: 
+          <label>شبكة المياه تصل للمدرسة:
             <select name="water"><option>نعم</option><option>لا</option></select>
           </label>
-          <label>شبكة الصرف الصحي تصل للمدرسة: 
+          <label>شبكة الصرف الصحي تصل للمدرسة:
             <select name="sewage"><option>نعم</option><option>لا</option></select>
           </label>
           <label>طرق الوصول للمدرسة: <input type="text" name="access"></label>
@@ -166,7 +159,7 @@
         </div>
       </div>
 
-      <!-- القسم الثاني: الصحة والسلامة -->
+      <!-- القسم الثاني -->
       <div class="form-step">
         <h2>الصحة والسلامة</h2>
         <div class="form-grid">
@@ -192,7 +185,7 @@
         </div>
       </div>
 
-      <!-- القسم الثالث: العناصر المدنية -->
+      <!-- القسم الثالث -->
       <div class="form-step">
         <h2>العناصر المدنية</h2>
         <div class="form-grid">
@@ -233,7 +226,7 @@
       </div>
     </form>
 
-    <!-- ✅ أزرار إضافية -->
+    <!-- أزرار إضافية -->
     <div class="form-navigation">
       <button type="button" id="newEntryBtn">🔄 إدخال جديد</button>
       <button type="button" id="logoutBtn">🚪 خروج</button>
@@ -248,7 +241,7 @@
   <script src="script.js"></script>
 
   <script>
-    // ✅ استخراج اليوم/الشهر/السنة تلقائيًا
+    // استخراج اليوم/الشهر/السنة من التاريخ
     document.getElementById("visit_date").addEventListener("change", function() {
       const date = new Date(this.value);
       const days = ["الأحد","الإثنين","الثلاثاء","الأربعاء","الخميس","الجمعة","السبت"];
@@ -257,18 +250,16 @@
       document.getElementById("visit_year").value = date.getFullYear();
     });
 
-    // ✅ تحميل اسم المشرف من LocalStorage
+    // تحميل اسم المشرف
     document.addEventListener("DOMContentLoaded", () => {
       const fullName = localStorage.getItem("fullName") || "مشرف";
       document.getElementById("visitor").value = fullName;
 
-      // زر الخروج
       document.getElementById("logoutBtn").addEventListener("click", () => {
         localStorage.clear();
         window.location.href = "login.html";
       });
 
-      // زر إدخال جديد
       document.getElementById("newEntryBtn").addEventListener("click", () => {
         document.getElementById("evaluationForm").reset();
         document.getElementById("evaluationForm").style.display = "none";
@@ -280,7 +271,7 @@
       });
     });
 
-    // ✅ التحكم في خطوات النموذج (التالي/السابق)
+    // التحكم في الخطوات
     document.addEventListener("DOMContentLoaded", () => {
       const steps = document.querySelectorAll(".form-step");
       const nextBtns = document.querySelectorAll(".next");
@@ -293,10 +284,8 @@
         });
       }
 
-      // عرض أول خطوة
       showStep(currentStep);
 
-      // التالي
       nextBtns.forEach(btn => {
         btn.addEventListener("click", () => {
           if (currentStep < steps.length - 1) {
@@ -306,7 +295,6 @@
         });
       });
 
-      // السابق
       prevBtns.forEach(btn => {
         btn.addEventListener("click", () => {
           if (currentStep > 0) {

@@ -1,18 +1,11 @@
-# ✅ أي دخول على الصفحة الرئيسية يذهب مباشرة إلى login.html
+# ✅ توجيه الصفحة الرئيسية لصفحة الدخول
 [[redirects]]
   from = "/"
   to = "/login.html"
   status = 302
   force = true
 
-# ✅ أي دخول مباشر لـ index.html يتم توجيهه أيضًا إلى login.html
-[[redirects]]
-  from = "/index.html"
-  to = "/login.html"
-  status = 302
-  force = true
-
-# ✅ Proxy للـ API (Google Apps Script)
+# ✅ توجيه API عبر Netlify Proxy إلى Google Apps Script
 [[redirects]]
   from = "/api/*"
   to = "https://script.google.com/macros/s/AKfycbwqd_Ze2vqdA0Fv_mWa-u7TzR_GI_qgXBXl9zqWixo4J6SgpmXxXE9kWd75kylpmA/exec"
