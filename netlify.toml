@@ -1,7 +1,7 @@
-# ✅ توجيه الصفحة الرئيسية لصفحة الدخول
+# ✅ توجيه الصفحة الرئيسية لصفحة الدخول (index.html)
 [[redirects]]
   from = "/"
-  to = "/login.html"
+  to = "/index.html"
   status = 302
   force = true
 
