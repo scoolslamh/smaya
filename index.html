@@ -245,8 +245,6 @@
     <p>جميع الحقوق محفوظة لشركة سمايا © 2025</p>
   </footer>
 
-  <script src="script.js"></script>
-
   <script>
     // ✅ استخراج اليوم/الشهر/السنة تلقائيًا
     document.getElementById("visit_date").addEventListener("change", function() {
@@ -280,16 +278,21 @@
       });
     });
 
-    // ✅ التحكم في خطوات النموذج (التالي/السابق)
+    // ✅ التحكم في خطوات النموذج (التالي/السابق + إرسال)
     document.addEventListener("DOMContentLoaded", () => {
       const steps = document.querySelectorAll(".form-step");
       const nextBtns = document.querySelectorAll(".next");
       const prevBtns = document.querySelectorAll(".prev");
+      const form = document.getElementById("evaluationForm");
       let currentStep = 0;
 
       function showStep(index) {
         steps.forEach((step, i) => {
           step.style.display = i === index ? "block" : "none";
+          // ✅ تعطيل الحقول في الخطوات المخفية
+          step.querySelectorAll("input, select, textarea").forEach(input => {
+            input.disabled = i !== index;
+          });
         });
       }
 
@@ -299,9 +302,13 @@
       // التالي
       nextBtns.forEach(btn => {
         btn.addEventListener("click", () => {
-          if (currentStep < steps.length - 1) {
-            currentStep++;
-            showStep(currentStep);
+          if (form.checkValidity()) {
+            if (currentStep < steps.length - 1) {
+              currentStep++;
+              showStep(currentStep);
+            }
+          } else {
+            form.reportValidity();
           }
         });
       });
@@ -314,6 +321,39 @@
             showStep(currentStep);
           }
         });
+      });
+
+      // ✅ عند الإرسال
+      form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+
+        const formData = new FormData(form);
+        const body = {};
+        formData.forEach((value, key) => {
+          body[key] = value;
+        });
+        body.action = "saveEvaluation";
+
+        try {
+          const res = await fetch("/api", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(body)
+          });
+
+          const data = await res.json();
+          if (data.success) {
+            alert("✅ تم حفظ التقييم بنجاح");
+            form.reset();
+            currentStep = 0;
+            showStep(currentStep);
+          } else {
+            alert("❌ حدث خطأ أثناء الحفظ: " + data.message);
+          }
+        } catch (err) {
+          console.error(err);
+          alert("⚠️ خطأ في الاتصال بالخادم");
+        }
       });
     });
   </script>
