@@ -19,8 +19,8 @@
     .login-container {
       flex: 1;
       display: flex;
-      justify-content: center; /* توسيط أفقياً */
-      align-items: center;     /* توسيط عمودياً */
+      justify-content: center;
+      align-items: center;
       margin: 30px 0;
     }
 
@@ -128,7 +128,9 @@
   </footer>
 
   <script>
-    const API_URL = "https://script.google.com/macros/s/AKfycbww3Tvpb-SQynjuKYVB0-gun_pmelhhkYdDq845D_0x9iQkUBvjyb07xbCfDNMNxNem/exec";
+    // ✅ بدلًا من استدعاء Google Apps Script مباشرة (يسبب CORS)
+    // سنستخدم Proxy عبر Netlify
+    const API_URL = "/api"; 
 
     document.getElementById("loginForm").addEventListener("submit", async function(e) {
       e.preventDefault();
@@ -145,7 +147,7 @@
         const data = await res.json();
 
         if (data.success) {
-          // ✅ حفظ بيانات المستخدم في LocalStorage
+          // ✅ حفظ بيانات المستخدم
           localStorage.setItem("loggedIn", "true");
           localStorage.setItem("username", username);
           localStorage.setItem("role", data.role || "");
