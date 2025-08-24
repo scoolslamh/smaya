@@ -61,7 +61,7 @@
       margin-top: 20px;
     }
     .form-navigation button {
-      margin: 0 10px;
+      margin: 5px;
       padding: 10px 25px;
       background: #13344f;
       color: white;
@@ -144,7 +144,10 @@
           <label>المنطقة: <input type="text" name="region" id="region" readonly></label>
           <label>المدينة: <input type="text" name="city" id="city" readonly></label>
           <label>اسم المدرسة: <input type="text" name="school" id="school" readonly></label>
-          <label>الرقم الوزاري: <input type="text" name="code" id="code" readonly></label>
+
+          <!-- 🟢 الرقم الوزاري مفتوح للإدخال -->
+          <label>الرقم الوزاري: <input type="text" name="code" id="code" required></label>
+
           <label>اسم الحي/الشارع: <input type="text" name="street"></label>
           <label>تصنيف المدرسة: <input type="text" name="category"></label>
           <label>المرحلة التعليمية: <input type="text" name="stage"></label>
@@ -232,6 +235,12 @@
       </div>
 
     </form>
+
+    <!-- ✅ أزرار إضافية -->
+    <div class="form-navigation">
+      <button type="button" id="newEntryBtn">🔄 إدخال جديد</button>
+      <button type="button" id="logoutBtn">🚪 خروج</button>
+    </div>
   </main>
 
   <!-- الفوتر -->
@@ -253,10 +262,25 @@
 
     // ✅ تحميل اسم المشرف تلقائيًا من تسجيل الدخول
     document.addEventListener("DOMContentLoaded", () => {
-      const visitor = localStorage.getItem("visitor");
-      if (visitor) {
-        document.getElementById("visitor").value = visitor;
-      }
+      const fullName = localStorage.getItem("fullName") || "مشرف";
+      document.getElementById("visitor").value = fullName;
+
+      // زر الخروج
+      document.getElementById("logoutBtn").addEventListener("click", () => {
+        localStorage.clear();
+        window.location.href = "login.html";
+      });
+
+      // زر إدخال جديد
+      document.getElementById("newEntryBtn").addEventListener("click", () => {
+        document.getElementById("evaluationForm").reset();
+        document.getElementById("evaluationForm").style.display = "none";
+        document.getElementById("regionFilter").value = "";
+        document.getElementById("cityFilter").innerHTML = '<option value="">اختر المدينة</option>';
+        document.getElementById("cityFilter").disabled = true;
+        document.getElementById("schoolFilter").innerHTML = '<option value="">اختر المدرسة</option>';
+        document.getElementById("schoolFilter").disabled = true;
+      });
     });
   </script>
 </body>

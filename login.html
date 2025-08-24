@@ -128,9 +128,9 @@
   </footer>
 
   <script>
-    // ✅ بدلًا من استدعاء Google Apps Script مباشرة (يسبب CORS)
-    // سنستخدم Proxy عبر Netlify
-    const API_URL = "/api"; 
+    // ✅ بدلًا من استدعاء Google Script مباشرة (CORS)
+    // نستخدم Proxy عبر Netlify (netlify.toml)
+    const API_URL = "/api";
 
     document.getElementById("loginForm").addEventListener("submit", async function(e) {
       e.preventDefault();
@@ -144,6 +144,10 @@
           body: JSON.stringify({ action: "login", username, password })
         });
 
+        if (!res.ok) {
+          throw new Error("استجابة غير صالحة من الخادم");
+        }
+
         const data = await res.json();
 
         if (data.success) {
@@ -151,16 +155,16 @@
           localStorage.setItem("loggedIn", "true");
           localStorage.setItem("username", username);
           localStorage.setItem("role", data.role || "");
-          localStorage.setItem("visitor", data.fullName || "مشرف");
+          localStorage.setItem("fullName", data.fullName || "مشرف");
 
           // ✅ الانتقال لصفحة التقييم
           window.location.href = "index.html";
         } else {
-          document.getElementById("errorMsg").textContent = data.message;
+          document.getElementById("errorMsg").textContent = data.message || "❌ بيانات الدخول غير صحيحة";
         }
       } catch (err) {
         document.getElementById("errorMsg").textContent = "⚠️ خطأ في الاتصال بالخادم";
-        console.error(err);
+        console.error("خطأ:", err);
       }
     });
   </script>
