@@ -5,12 +5,22 @@ const API_URL = "/api";
 // ✅ تحميل قائمة المدارس عند فتح الصفحة
 async function loadSchools() {
   try {
-    const res = await fetch(API_URL);
+    const res = await fetch(API_URL, { method: "GET" });
+    
+    // لو ما رجع JSON (مثلاً رجع HTML خطأ) → نوقف
+    if (!res.ok) {
+      throw new Error(`HTTP Error ${res.status}`);
+    }
+
     const schools = await res.json();
 
     // استخراج المناطق
     const regions = [...new Set(schools.map(s => s.region))];
     const regionSelect = document.getElementById("regionFilter");
+
+    // تفريغ القوائم القديمة
+    regionSelect.innerHTML = '<option value="">اختر المنطقة</option>';
+
     regions.forEach(r => {
       const opt = document.createElement("option");
       opt.value = r;
@@ -18,15 +28,15 @@ async function loadSchools() {
       regionSelect.appendChild(opt);
     });
 
-    // عند اختيار المنطقة
+    // ✅ عند اختيار المنطقة
     regionSelect.addEventListener("change", () => {
       const citySelect = document.getElementById("cityFilter");
       citySelect.innerHTML = '<option value="">اختر المدينة</option>';
       citySelect.disabled = false;
 
-      const filteredCities = [...new Set(schools
-        .filter(s => s.region === regionSelect.value)
-        .map(s => s.city))];
+      const filteredCities = [...new Set(
+        schools.filter(s => s.region === regionSelect.value).map(s => s.city)
+      )];
 
       filteredCities.forEach(c => {
         const opt = document.createElement("option");
@@ -36,7 +46,7 @@ async function loadSchools() {
       });
     });
 
-    // عند اختيار المدينة
+    // ✅ عند اختيار المدينة
     document.getElementById("cityFilter").addEventListener("change", () => {
       const schoolSelect = document.getElementById("schoolFilter");
       schoolSelect.innerHTML = '<option value="">اختر المدرسة</option>';
@@ -57,7 +67,7 @@ async function loadSchools() {
       });
     });
 
-    // عند اختيار مدرسة
+    // ✅ عند اختيار مدرسة
     document.getElementById("schoolFilter").addEventListener("change", async () => {
       const schoolSelect = document.getElementById("schoolFilter");
       const selectedOption = schoolSelect.options[schoolSelect.selectedIndex];
@@ -72,6 +82,9 @@ async function loadSchools() {
       // ✅ استدعاء آخر بيانات للمدرسة من السيرفر
       try {
         const res = await fetch(`${API_URL}?school=${encodeURIComponent(selectedOption.value)}`);
+        
+        if (!res.ok) throw new Error(`HTTP Error ${res.status}`);
+        
         const data = await res.json();
 
         if (data.status === "found") {
@@ -94,8 +107,9 @@ async function loadSchools() {
 
   } catch (err) {
     console.error("⚠️ خطأ في تحميل المدارس:", err);
+    alert("⚠️ تعذر تحميل قائمة المدارس. يرجى المحاولة لاحقاً.");
   }
 }
 
-// تحميل المدارس عند فتح الصفحة
+// ✅ تحميل المدارس عند فتح الصفحة
 window.addEventListener("DOMContentLoaded", loadSchools);
